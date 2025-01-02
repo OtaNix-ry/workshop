@@ -19,7 +19,7 @@
       devShells = eachSystem (
         system:
         let
-          rev = if (self ? rev) then self.rev else "dirty";
+          rev = self.rev or "dirty";
           pkgs = nixpkgs.legacyPackages.${system};
           typst-watch = pkgs.writeShellScriptBin "typst-watch" ''
             ${pkgs.typst}/bin/typst watch --input rev=${rev} "$@"
