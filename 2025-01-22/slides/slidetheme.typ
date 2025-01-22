@@ -41,6 +41,10 @@
     self: self,
     title: if title == auto { self.m-title = title } else { title },
     setting: body => {
+      show footnote.entry: it => {
+        set text(self.colors.neutral-light)
+        it
+      }
       show: _saved-align.with(align)
       set text(fill: self.colors.neutral-dark)
       show: args.named().at("setting", default: body => body)
@@ -91,11 +95,16 @@
 
 #let new-section-slide(self: none, short-title: auto, title) = {
   self = utils.empty-page(self)
+  self.page-args += (
+    fill: self.colors.secondary-dark,
+  )
+  set text(fill: self.colors.neutral-dark)
   let content = {
     set align(horizon)
     show: pad.with(20%)
     set text(size: 1.5em)
     states.current-section-with-numbering(self)
+    v(0.65em)
     block(height: 2pt, width: 100%, spacing: 0pt, utils.call-or-display(self, self.m-progress-bar))
   }
   (self.methods.touying-slide)(self: self, repeat: none, section: (title: title, short-title: short-title), content)

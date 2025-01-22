@@ -25,11 +25,6 @@
 #set text(font: "Fira Sans", weight: "light", size: 20pt)
 
 // TODO how to set emoji font for all emojis?
-#show finger.front: set text(font: "Noto Emoji")
-#show snowflake: set text(font: "Noto Emoji")
-#show package: set text(font: "Noto Emoji")
-#show whale: set text(font: "Noto Emoji")
-#show book: set text(font: "Noto Emoji")
 
 #let bullets = (snowflake,)
 // MEGATUNKKAUS
@@ -55,7 +50,9 @@
 
 #show link: set text(slidetheme.default-colors.primary-dark)
 
-#let s = slidetheme.register(footer: link("https://gitlab.com/niklashh/nix-notes/-/blob/" + sys.inputs.rev + "/slides/introduction-2024-08-28.typ")[Presentation source code])
+#let s = slidetheme.register(
+  // footer: link("https://gitlab.com/niklashh/nix-notes/-/blob/" + sys.inputs.rev + "/slides/introduction-2024-08-28.typ")[Presentation source code]
+)
 #let s = (s.methods.info)(
   self: s,
   title: [
@@ -79,6 +76,217 @@
 
 // == User Program and Configuration Management with `home-manager`
 
-== Presentation outline
+== Agenda
+
++ Introduction and basics
++ Hands-on installation to a VM
+  - Follow along!
+
+==
+  
+#image("society-meme.png")
+
+== What is home-manager (H-M)?
+
++ A Nix module for managing user applications and services, and their configuration, a.k.a _dotfiles_.
++ A CLI for interacting and invoking the H-M module.
+  
+Home-manager's (mostly a reiteration of Nix's) philosophy:
+  - Reproducibility: building a configuration leads to a _unique_ outcome.
+  - Separation of concerns: enables splitting code into modules and files.
+  - Declarative unified#footnote[Some H-M modules just provide a `configFile` option, whereas some have more complex `settings` as well as a `configFile`.] configuration.
+  - Cross reference/link configuration options and variables.
+    - Even integrate to the NixOS configuration.
+  - As always, everything is just a *symbolic link* to the Nix store.
+
+== A word of warning
+
+- Many modules/services are available on both NixOS and H-M which may conflict with each other if enabled and may have incompatible configuration options or varying feature support.
+
+== Installation (standalone)
+
++ Installing nix and git (if not already installed)
++ Starting a shell with `home-manager` CLI
++ Creating a standalone H-M config repository
++ H-M basics and solving the common OpenGL problem
+  - User programs
+  - User services
+  - Window manager
++ Setting up more complicated H-M integration with FireFox, VSCode
+
+== Installing Nix
+
+#align(center)[
+https://docs.determinate.systems/getting-started/
+]
+
+\
+
+```sh
+curl -fsSL https://install.determinate.systems/nix | \
+    sh -s -- install --determinate
+```
+
+== Creating a standalone H-M config repository
+
+```bash
+git init ~/dotfiles
+nix run home-manager/release-24.11 -- init ~/dotfiles
+# Note: home-manager/master is the latest unstable version of H-M
+cd ~/dotfiles
+git add . # Required because flakes ignore files outside of git
+nix run home-manager/release-24.11 -- switch --flake ~/dotfiles
+```
+
+==
+
+Expected outcomes:
+- (The news are shown)
+- You have the `home-manager` program available
+- `dotfiles` repository contains the following files
+  - ```bash
+    dotfiles
+    ├─ .git/
+    ├─ flake.nix
+    ├─ flake.lock
+    └─ home.nix
+    ```
+
+== Decrypting the Default Configuration
+
+The default `flake.nix` is as follows and is all set to start using H-M so you *don't need to understand* any of it right now:
+
+#block[
+#set text(size: 14pt)
+
+#grid(columns: (1fr,)*2, gutter: 1em)[
+```nix
+{
+  description = "H-M configuration of otanix";
+
+  inputs = {
+    # Specify the source of H-M and Nixpkgs.
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+```
+][
+```nix
+  outputs = { nixpkgs, home-manager, ... }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      homeConfigurations."otanix" =
+        home-manager.lib
+          .homeManagerConfiguration {
+        inherit pkgs;
+
+        # Specify your home configuration
+        # modules here, for example,
+        # the path to your home.nix.
+        modules = [ ./home.nix ];
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+      };
+    };
+}
+```
+]
+]
+
+== Decrypting `home.nix`
+
+This is more relevant for day-to-day configuration of H-M.
+
+#block[
+#set text(size: 18pt)
+
+#grid(columns: (1fr,)*2, gutter: 1em)[
+```nix
+{pkgs, ...}:
+
+let
+  # Personal Info
+  name = "Matti Meikäläinen";
+  email = "matti.meikalainen@iki.fi";
+  username = "leet-matti";
+  githubUsername = "MattimusUltimatus";
+
+  homeDir = "/home/${username}"
+in {
+
+```
+][
+```nix
+  programs = {
+    home-manager.enable = true;
+    git = {
+      enable = true;
+      userName = "${name}";
+      userEmail = "${email}";
+    }
+    fish = {
+      enable = true;
+      shellAbbrs = {
+        "l" = "ls -arthl";
+      }
+    }
+  }
+}
+  
+```
+] 
+]
+== How to Install Programs
+Under the `programs` attribute set, you can add programs and configure them. I want to have Firefox so let's add it.
+
+```nix
+programs = {
+  firefox = {
+    enable = true;
+    
+  }
+}
+```
+
+== Rebuilding the Configuration
+
+```bash
+home-manager switch --flake ~/dotfiles
+```
+
+== H-M Commands
+
+Some of the useful commands provided
+
+```bash
+Commands
+  option OPTION.NAME      Inspect configuration option named OPTION.NAME.
+
+  build                   Build configuration into result directory
+
+  switch                  Build and activate configuration
+
+  generations             List all home environment generations
+
+  packages                List all packages installed in home-manager-path
+
+  uninstall               Remove Home Manager
+```
 
 
+== Resources
+
+Here are some useful resources for finding H-M 
+- https://nix-community.github.io/home-manager/index.xhtml#sec-flakes-standalone
+
+- https://home-manager-options.extranix.com/
+
+== Notes
+
+- How to use wireshark or other privileged programs through Nix on Debian

@@ -20,7 +20,7 @@
 }
 
 #let s = slidetheme.register(
-  footer: link("https://github.com/OtaNix-ry/workshop/blob/" + sys.inputs.rev + "/2025-01-22/slides/nix.typ")[Presentation source code],
+  // footer: link("https://github.com/OtaNix-ry/workshop/blob/" + sys.inputs.rev + "/2025-01-22/slides/nix.typ")[Presentation source code],
 )
 #let s = (s.methods.info)(
   self: s,
