@@ -72,7 +72,7 @@
 #show link: set text(slidetheme.default-colors.primary-dark)
 
 #let s = slidetheme.register(
-  footer: link("https://github.com/OtaNix-ry/workshop/blob/" + sys.inputs.rev + "/2025-01-22/slides/intro-slides.typ")[Presentation source code],
+  // footer: link("https://github.com/OtaNix-ry/workshop/blob/" + sys.inputs.rev + "/2025-01-22/slides/intro-slides.typ")[Presentation source code],
 )
 #let s = (s.methods.info)(
   self: s,

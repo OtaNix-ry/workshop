@@ -249,20 +249,26 @@ Under the `programs` attribute set, you can add programs and configure them. I w
 programs = {
   firefox = {
     enable = true;
-    
   }
 }
 ```
 
 == Rebuilding the Configuration
 
-```bash
-home-manager switch --flake ~/dotfiles
-```
++ Make changes to the configuration
++ Git add them
++ Run
+  ```bash
+  home-manager switch --flake ~/dotfiles
+  ```
++ If there's an error
+  - Then: decrypt the error message
+  - Else: test out the changes
++ Go back to step 1.
 
 == H-M Commands
 
-Some of the useful commands provided
+Some of the useful commands provided by `home-manager --help`:
 
 ```bash
 Commands
@@ -287,6 +293,6 @@ Here are some useful resources for finding H-M
 
 - https://home-manager-options.extranix.com/
 
-== Notes
+// == Notes
 
-- How to use wireshark or other privileged programs through Nix on Debian
+// - How to use wireshark or other privileged programs through Nix on Debian
