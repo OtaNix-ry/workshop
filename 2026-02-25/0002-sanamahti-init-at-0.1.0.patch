@@ -1,0 +1,80 @@
+From 1c8a8468a69deb6858b92a04a59210422a7f9998 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Luukas=20P=C3=B6rtfors?= <lajp@iki.fi>
+Date: Thu, 26 Feb 2026 22:48:04 +0200
+Subject: [PATCH 2/2] sanamahti: init at 0.1.0
+
+---
+ .../0001-fix-lazy_cell-is-stable.patch        | 22 +++++++++++++
+ pkgs/by-name/sa/sanamahti/package.nix         | 31 +++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 pkgs/by-name/sa/sanamahti/0001-fix-lazy_cell-is-stable.patch
+ create mode 100644 pkgs/by-name/sa/sanamahti/package.nix
+
+diff --git a/pkgs/by-name/sa/sanamahti/0001-fix-lazy_cell-is-stable.patch b/pkgs/by-name/sa/sanamahti/0001-fix-lazy_cell-is-stable.patch
+new file mode 100644
+index 000000000000..b12fe9bd2593
+--- /dev/null
++++ b/pkgs/by-name/sa/sanamahti/0001-fix-lazy_cell-is-stable.patch
+@@ -0,0 +1,22 @@
++From 1b3072fcb2609cc474a84b1d2de30f77d63335c6 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Luukas=20P=C3=B6rtfors?= <lajp@iki.fi>
++Date: Wed, 25 Feb 2026 18:14:35 +0200
++Subject: [PATCH] fix: lazy_cell is stable
++
++---
++ src/lib.rs | 2 --
++ 1 file changed, 2 deletions(-)
++
++diff --git a/src/lib.rs b/src/lib.rs
++index c6d2e54..2951562 100644
++--- a/src/lib.rs
+++++ b/src/lib.rs
++@@ -1,5 +1,3 @@
++-#![feature(lazy_cell)]
++-
++ use std::collections::{HashSet, VecDeque};
++ use std::fs::File;
++ use std::io::{BufRead, BufReader};
++-- 
++2.51.2
++
+diff --git a/pkgs/by-name/sa/sanamahti/package.nix b/pkgs/by-name/sa/sanamahti/package.nix
+new file mode 100644
+index 000000000000..3f88b7746323
+--- /dev/null
++++ b/pkgs/by-name/sa/sanamahti/package.nix
+@@ -0,0 +1,31 @@
++{
++  rustPlatform,
++  fetchFromGitHub,
++  makeWrapper,
++}:
++rustPlatform.buildRustPackage (finalAttrs: {
++  pname = "sanamahti";
++  version = "0.1.0";
++
++  patches = [
++    ./0001-fix-lazy_cell-is-stable.patch
++  ];
++
++  nativeBuildInputs = [
++    makeWrapper
++  ];
++
++  src = fetchFromGitHub {
++    owner = "lajp";
++    repo = "sanamahti";
++    rev = "697353b6d021662db853c37190f1a9e68885166b";
++    hash = "sha256-DieMIH5e33VY7YyErgT0TWCywzPCC4fz75AndfeQOIs=";
++  };
++
++  cargoHash = "sha256-+jVQsbebSEgaq5jKTttX4VszFBGi83nQVWPJ+keeH0U=";
++  cargoDepsName = finalAttrs.pname;
++
++  postFixup = ''
++    wrapProgram $out/bin/sanamahti --chdir ${finalAttrs.src}
++  '';
++})
+-- 
+2.51.2
+
