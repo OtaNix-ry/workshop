@@ -23,7 +23,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
           typst-font-paths = builtins.concatStringsSep ":" [
             "${pkgs.fira-sans}/share/fonts"
-            "${pkgs.noto-fonts-emoji}/share/fonts"
+            "${pkgs.noto-fonts-color-emoji}/share/fonts"
           ];
           typst-watch = pkgs.writeShellScriptBin "typst-watch" ''
             ${pkgs.typst}/bin/typst watch --input rev=${rev} "$@"
@@ -35,7 +35,7 @@
               typst
               typst-watch
               fira-sans
-              noto-fonts-emoji
+              noto-fonts-color-emoji
             ];
             TYPST_FONT_PATHS = typst-font-paths;
           };
