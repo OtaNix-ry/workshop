@@ -47,7 +47,7 @@
   config-info(
     title: [Pretty Good Privacy (PGP)],
     subtitle: [What is PGP and how to use it],
-    author: [Luukas Pörtfors],
+    author: [Luukas Pörtfors, Niklas Halonen],
     date: datetime(year: 2026, month: 8, day: 10),
     institution: [OtaNix ry #box(baseline: 0.15em, image("otanix.svg", height: 1em))],
   ),
@@ -96,14 +96,20 @@
 
 == Keys, keypairs, and subkeys
 
-- A *key* is a string of character used by a cryptographic algorithm to encode or decode data
-- A *key pair* refers to a pair of a *public* and *private* key in asymmetric crypto
--
+- A *cryptographic key* (or just key) is a string of character used by a cryptographic algorithm to encode or decode data #pause
+- A *key pair* refers to a pair of a *public* and *private* key in asymmetric crypto. The word "key" is also often used for "key pair" #pause
+- A *subkey* is a keypair used for a specific role or roles: *encryption*, *signing* or *authentication* #pause
+- In PGP, a *key* (certificate) is really a collection of keypairs: a primary *certification* key plus subkeys, and identification metadata
+- The word "key" can refer to any of the above (or even just a public key), but we use it only to refer to a PGP key
 
-== Algorithms
+== Keys, keypairs, and subkeys in PGP
 
-== PGP vs. GPG
+TODO pictures
 
-== Example: Using GPG
+// == Algorithms
 
-== Hardware keys
+// == PGP vs. GPG
+
+// == Example: Using GPG
+
+// == Hardware keys
