@@ -62,8 +62,9 @@
 #grid(
   columns: (1fr, 3fr, 1fr),
   row-gutter: 4%,
-  [1900], [], [],
   [1800], [Food #emoji.pizza], [Everyone],
+  [18->], [Workshop], [Luukas & Niklas],
+  [->], [Networking], [Everyone],
 )
 
 == What is OtaNix?

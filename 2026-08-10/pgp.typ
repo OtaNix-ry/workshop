@@ -168,11 +168,52 @@ TL;DR: (Open)PGP is the standard, GnuPG is the _de-facto_ implementation for PC.
   image("Web_of_Trust-en.svg"),
 )
 
-// == Hardware keys
+== Hardware keys
 
+#slide[
+  #image("gpg_offline_master_key_1.png")
+][
+  #move(dy: -4pt, image("gpg_offline_master_key_2.png"))
+]
 
+#focus-slide[DEMO: YubiKey provisioning#footnote[Follow along: https://github.com/lajp/YubiKey-Guide]]
+
+== YubiKey on NixOS
+
+=== Enable YubiKey and authentication through it
+
+```nix
+services.udev.packages = [ pkgs.yubikey-personalization ];
+hardware.gpgSmartcards.enable = true;
+services.pcscd.enable = true;
+
+security.pam.services = {
+  login.u2fAuth = true;
+  sudo.u2fAuth = true;
+};
+
+security.pam.services.swaylock.text = "auth include login";
+```
+
+== YubiKey extras
+
+- FIDO2 things (in chromium)
+- `systemd-cryptenroll` for enrolling LUKS keys
+```nix
+# Run sudo systemd-cryptenroll --fido2-device=auto /dev/disk/by-uuid/ded9ed69-89cb-4415-8532-33907ffa0b1e
+# to enroll yubikey as FIDO2 device
+boot.initrd.luks.devices."luks-ded9ed69-89cb-4415-8532-33907ffa0b1e" = {
+  device = "/dev/disk/by-uuid/ded9ed69-89cb-4415-8532-33907ffa0b1e";
+  crypttabExtraOpts = [
+    "fido2-device=auto"
+  ];
+};
+```
+- age with piv: https://github.com/str4d/age-plugin-yubikey
 
 == Sources
 
+- https://github.com/drduh/YubiKey-Guide
+- https://web.archive.org/web/20251027132314/https://rgoulter.com/blog/posts/programming/2022-06-10-a-visual-explanation-of-gpg-subkeys.html
 - https://medium.com/@rushikajayasinghe/what-is-pretty-good-privacy-pgp-6327e760587d
 - https://users.ece.cmu.edu/~adrian/630-f04/PGP-intro.html
