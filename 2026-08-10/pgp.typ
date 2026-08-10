@@ -104,12 +104,60 @@
 
 == Keys, keypairs, and subkeys in PGP
 
-TODO pictures
+#box[
+  #image("gpg_key_generation.png", height: 90%)
 
-// == Algorithms
+  Images from: https://web.archive.org/web/20251027132314/https://rgoulter.com/blog/posts/programming/2022-06-10-a-visual-explanation-of-gpg-subkeys.html
+]
 
-// == PGP vs. GPG
 
-// == Example: Using GPG
+#image("gpg_export_key.png")
+
+== Algorithms
+
+=== A table of popular cryptographic algorithms
+
+#table(
+  columns: (1fr,) * 3,
+  table.header([*Algo*], [*Type*], [*Supported by YubiKey*]),
+
+  [AES], [Symmetric], [Yes\*],
+  [ChaCha20], [Symmetric], [No],
+  [RSA], [Asymmetric], [Yes],
+  [ECDSA], [Asymmetric], [Yes],
+  [Ed25519], [Asymmetric], [Yes],
+  [X25519], [Asymmetric], [Yes],
+)
+
+\* AES is supported for PIV management-key operations.
+
+== PGP vs. GPG
+
+- GNU Privacy Guard (GnuPG or GPG) is an implementation of the OpenPGP specification based on PGP #pause
+- GPG has since diverged from OpenPGP in favor of their own LibrePGP standard #pause
+- GPG implements and may recommend usage of non-standard extensions not supported by all implementations of OpenPGP #pause
+
+TL;DR: (Open)PGP is the standard, GnuPG is the _de-facto_ implementation for PC.
+
+== Example: Using GPG
+
++ Alice, Bob, and Carol each have a PGP certificate (key)
+  - They share their *public* keys with eachother #pause
++ Alice sends a *secret* message to Bob who is able to decrypt it
+  - Carol is not able to decrypt it #pause
+  - Alice is also not able to decrypt it #pause
++ Alice sends another message to Bob, this time also *signing* it and adding themselves as a recipient
+  - Alice is able to decrypt and see the signature
+  - Bob is able to decrypt and see the *untrusted* signature #pause
+  - If Bob trusts Alice's key, they can *sign* (certify) it and share the signed key #pause
++ Alice sends a signed message to Carol
+  - Carol is able to decrypt it and sees the *indirectly trusted* (undefined) signature
+
+== Web of Trust
+
+#figure(
+  caption: [By Kku - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=80652637],
+  image("Web_of_Trust-en.svg"),
+)
 
 // == Hardware keys
