@@ -131,6 +131,14 @@
 
 \* AES is supported for PIV management-key operations.
 
+== How PGP encryption works
+
+#box[
+  #image("gpg_encrypt.png", height: 90%)
+
+  Image from: https://medium.com/@rushikajayasinghe/what-is-pretty-good-privacy-pgp-6327e760587d
+]
+
 == PGP vs. GPG
 
 - GNU Privacy Guard (GnuPG or GPG) is an implementation of the OpenPGP specification based on PGP #pause
@@ -161,3 +169,10 @@ TL;DR: (Open)PGP is the standard, GnuPG is the _de-facto_ implementation for PC.
 )
 
 // == Hardware keys
+
+
+
+== Sources
+
+- https://medium.com/@rushikajayasinghe/what-is-pretty-good-privacy-pgp-6327e760587d
+- https://users.ece.cmu.edu/~adrian/630-f04/PGP-intro.html
